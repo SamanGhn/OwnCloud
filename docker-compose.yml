@@ -1,5 +1,3 @@
-# docker-compose.yml
-
 volumes:
   files:
   mysql:
@@ -10,7 +8,7 @@ networks:
 
 services:
   owncloud:
-    image: owncloud/server:${OWNCLOUD_VERSION}
+    image: ${DOCKER_USER}/owncloud:latest
     container_name: owncloud_server
     restart: unless-stopped
     depends_on:
