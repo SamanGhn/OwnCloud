@@ -1,16 +1,12 @@
-version: "3.9"
+# docker-compose.yml
 
 volumes:
   files:
-    driver: local
   mysql:
-    driver: local
   redis:
-    driver: local
 
 networks:
   owncloud_net:
-    driver: bridge
 
 services:
   owncloud:
@@ -23,18 +19,18 @@ services:
     ports:
       - "${HTTP_PORT}:8080"
     environment:
-      - OWNCLOUD_DOMAIN=${OWNCLOUD_DOMAIN}
-      - OWNCLOUD_TRUSTED_DOMAINS=${OWNCLOUD_TRUSTED_DOMAINS}
-      - OWNCLOUD_DB_TYPE=mysql
-      - OWNCLOUD_DB_NAME=${OWNCLOUD_DB_NAME}
-      - OWNCLOUD_DB_USERNAME=${OWNCLOUD_DB_USERNAME}
-      - OWNCLOUD_DB_PASSWORD=${OWNCLOUD_DB_PASSWORD}
-      - OWNCLOUD_DB_HOST=mariadb
-      - OWNCLOUD_ADMIN_USERNAME=${ADMIN_USERNAME}
-      - OWNCLOUD_ADMIN_PASSWORD=${ADMIN_PASSWORD}
-      - OWNCLOUD_MYSQL_UTF8MB4=true
-      - OWNCLOUD_REDIS_ENABLED=true
-      - OWNCLOUD_REDIS_HOST=redis
+      OWNCLOUD_DOMAIN: ${OWNCLOUD_DOMAIN}
+      OWNCLOUD_TRUSTED_DOMAINS: ${OWNCLOUD_TRUSTED_DOMAINS}
+      OWNCLOUD_DB_TYPE: mysql
+      OWNCLOUD_DB_NAME: ${OWNCLOUD_DB_NAME}
+      OWNCLOUD_DB_USERNAME: ${OWNCLOUD_DB_USERNAME}
+      OWNCLOUD_DB_PASSWORD: ${OWNCLOUD_DB_PASSWORD}
+      OWNCLOUD_DB_HOST: mariadb
+      OWNCLOUD_ADMIN_USERNAME: ${ADMIN_USERNAME}
+      OWNCLOUD_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      OWNCLOUD_MYSQL_UTF8MB4: "true"
+      OWNCLOUD_REDIS_ENABLED: "true"
+      OWNCLOUD_REDIS_HOST: redis
     healthcheck:
       test: ["CMD", "/usr/bin/healthcheck"]
       interval: 30s
@@ -50,11 +46,11 @@ services:
     container_name: owncloud_mariadb
     restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_USER=${OWNCLOUD_DB_USERNAME}
-      - MYSQL_PASSWORD=${OWNCLOUD_DB_PASSWORD}
-      - MYSQL_DATABASE=${OWNCLOUD_DB_NAME}
-      - MARIADB_AUTO_UPGRADE=1
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${OWNCLOUD_DB_USERNAME}
+      MYSQL_PASSWORD: ${OWNCLOUD_DB_PASSWORD}
+      MYSQL_DATABASE: ${OWNCLOUD_DB_NAME}
+      MARIADB_AUTO_UPGRADE: 1
     command: ["--max-allowed-packet=128M", "--innodb-log-file-size=64M"]
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-u", "root", "--password=${MYSQL_ROOT_PASSWORD}"]
