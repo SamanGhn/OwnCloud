@@ -43,8 +43,8 @@ This project provides a complete environment to run **OwnCloud** with MariaDB an
    OWNCLOUD_DB_PASSWORD=SuperSecretPass
    MYSQL_ROOT_PASSWORD=RootSecretPass
    ADMIN_USERNAME=admin
-   ADMIN_PASSWORD=AdminSuperSecret
-   DOCKER_USER=samanuser
+   ADMIN_PASSWORD=admin
+   DOCKER_USER=username
    ```
 
 2. Make sure `DOCKER_USER` and `DOCKER_PASS` are added as GitHub Secrets in your repository.
