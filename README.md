@@ -1,66 +1,103 @@
-# OwnCloud Docker Setup
-
-This repository contains a **secure and production-ready** Docker Compose configuration for running **OwnCloud** with **MariaDB** and **Redis**.  
-Passwords and sensitive data are **not** stored in the repository — instead, they are managed via an `.env` file.
+باش سامان جان  
+این نسخه README رو به انگلیسی و با همون تغییرات جدید و هماهنگ با CI/CD و Docker Compose برات آماده کردم:  
 
 ---
 
-## 📦 How It Works
-- `docker-compose.yml` – Docker Compose setup for OwnCloud, MariaDB, and Redis.  
-- `.env.example` – Template for environment variables **without sensitive data**.  
-- `.env` – Your real secrets and configuration values (this file should **never** be committed to Git).  
-- `.gitignore` – Ensures `.env` stays private.
+## 📄 `README.md`
+```markdown
+# OwnCloud DevOps Setup
+
+This project provides a complete environment to run **OwnCloud** with MariaDB and Redis, featuring:
+- Docker Compose configuration
+- Custom OwnCloud Docker image build
+- CI/CD pipeline via **GitHub Actions** for building and pushing to Docker Hub
+- Easy execution in both local and production environments
 
 ---
 
-## 🚀 Quick Start
+## 🗂 Project Structure
+```
+.
+├── .env                        # Environment variables
+├── docker-compose.yml          # Service definitions
+├── Dockerfile                  # Custom OwnCloud image build
+├── .github/
+│   └── workflows/
+│       └── docker-build.yml    # GitHub Actions workflow for CI/CD
+└── README.md
+```
 
-1. **Clone this repository** to your server:
-   ```bash
-   git clone https://github.com/USERNAME/owncloud-docker.git
-   cd owncloud-docker
-   ```
+---
 
-2. **Copy the environment template** to create your real `.env`:
-   ```bash
-   cp .env.example .env
-   ```
+## ⚙ Prerequisites
+- **Docker** and **Docker Compose**
+- Docker Hub account
+- GitHub repository connected to Docker Hub
 
-3. **Edit `.env`** and set:
-   - Admin username & password
-   - Database name & credentials
-   - OwnCloud domain and trusted domains
-   - Custom port (optional)
+---
 
-   Example:
+## 🔧 Environment Setup
+1. Edit `.env` with your desired configuration:
    ```env
-   ADMIN_USERNAME=myadmin
-   ADMIN_PASSWORD=StrongP@ssword!
-   OWNCLOUD_DB_PASSWORD=MySecureDbPass
-   MYSQL_ROOT_PASSWORD=AnotherStrongPass
+   OWNCLOUD_VERSION=10.13
+   HTTP_PORT=8080
+   OWNCLOUD_DOMAIN=cloud.example.com
+   OWNCLOUD_TRUSTED_DOMAINS=cloud.example.com
+   OWNCLOUD_DB_NAME=owncloud
+   OWNCLOUD_DB_USERNAME=owncloud
+   OWNCLOUD_DB_PASSWORD=SuperSecretPass
+   MYSQL_ROOT_PASSWORD=RootSecretPass
+   ADMIN_USERNAME=admin
+   ADMIN_PASSWORD=AdminSuperSecret
+   DOCKER_USER=samanuser
    ```
 
-4. **Start OwnCloud**:
+2. Make sure `DOCKER_USER` and `DOCKER_PASS` are added as GitHub Secrets in your repository.
+
+---
+
+## ▶ Local Run
+```bash
+docker compose --env-file .env up -d
+```
+Access: `http://localhost:8080`
+
+---
+
+## 🚀 CI/CD Workflow
+### Process:
+1. Push to the `main` branch.
+2. GitHub Actions will:
+   - Build the custom OwnCloud image based on the `Dockerfile`
+   - Push it to Docker Hub with `latest` and commit hash tags
+3. On the production server:
    ```bash
+   docker compose pull
    docker compose up -d
    ```
 
-5. **Access**:
-   - Open `http://your-server:8080` in your browser.
+---
+
+## 📡 Production Notes
+- Consider using a separate `docker-compose.prod.yml` for SSL and reverse proxy (e.g., Traefik or Nginx).
+- Monitoring and logging with Prometheus/Grafana/Loki is recommended.
+- Automated backups should be implemented for the database and files.
 
 ---
 
-## 🔐 Security Notes
-- Never commit your real `.env` to GitHub — the `.gitignore` in this repo already prevents this.
-- Choose strong, unique passwords.
-- Change the default ports or use a reverse proxy with HTTPS if hosting publicly.
-- Keep images updated:
-  ```bash
-  docker compose pull
-  docker compose up -d
-  ```
+## 🩺 Healthchecks
+Each service has a healthcheck:
+- **OwnCloud** → `/usr/bin/healthcheck`
+- **MariaDB** → `mysqladmin ping`
+- **Redis** → `redis-cli ping`
 
 ---
 
-## 📄 License
-This project is released under the MIT License.
+## 📜 License
+This project is released under the [MIT License](LICENSE).
+```
+
+---
+
+اگر بخوای الان میتونم این README رو هم بفرستم داخل مسیر پروژه‌ت و بعد با `git add/commit/push` بفرستی روی ریموت تا بعد از `git pull` همیشه همراه پروژه باشه.  
+میخوای همین کار رو انجام بدم که لوکال و ریموت هم‌زمان آپدیت شن؟
