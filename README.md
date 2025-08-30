@@ -1,38 +1,35 @@
-## 📄 `README.md`
 ```markdown
-# OwnCloud DevOps Setup
+# ☁️ OwnCloud DevOps Setup
 
-This project provides a complete environment to run **OwnCloud** with MariaDB and Redis, featuring:
-- Docker Compose configuration
-- Custom OwnCloud Docker image build
-- CI/CD pipeline via **GitHub Actions** for building and pushing to Docker Hub
-- Easy execution in both local and production environments
+A complete **OwnCloud** deployment environment powered by **Docker Compose**, **MariaDB**, **Redis**, and a fully automated **CI/CD pipeline** with **GitHub Actions**.  
+This setup works equally well for **local development** and **production deployment**.
 
 ---
 
-## 🗂 Project Structure
+## 📂 Project Structure
 ```
 .
 ├── .env                        # Environment variables
-├── docker-compose.yml          # Service definitions
+├── docker-compose.yml          # Service definitions (OwnCloud, MariaDB, Redis)
 ├── Dockerfile                  # Custom OwnCloud image build
 ├── .github/
 │   └── workflows/
 │       └── docker-build.yml    # GitHub Actions workflow for CI/CD
-└── README.md
+└── README.md                   # Project documentation
 ```
 
 ---
 
-## ⚙ Prerequisites
-- **Docker** and **Docker Compose**
-- Docker Hub account
-- GitHub repository connected to Docker Hub
+## ⚙️ Prerequisites
+- [Docker](https://docs.docker.com/get-docker/) & [Docker Compose](https://docs.docker.com/compose/)
+- (Optional) Docker Hub or GitHub Container Registry account
+- GitHub repository with appropriate **Secrets** configured
 
 ---
 
 ## 🔧 Environment Setup
-1. Edit `.env` with your desired configuration:
+
+1. Create or update the `.env` file with your desired configuration:
    ```env
    OWNCLOUD_VERSION=10.13
    HTTP_PORT=8080
@@ -47,24 +44,32 @@ This project provides a complete environment to run **OwnCloud** with MariaDB an
    DOCKER_USER=username
    ```
 
-2. Make sure `DOCKER_USER` and `DOCKER_PASS` are added as GitHub Secrets in your repository.
+2. Add your Docker registry credentials to GitHub Secrets:
+   - `DOCKER_USER` → Docker Hub / GHCR username  
+   - `DOCKER_PASS` → Docker Hub / GHCR password or token  
 
 ---
 
-## ▶ Local Run
+## ▶️ Local Development Run
+
 ```bash
 docker compose --env-file .env up -d
 ```
-Access: `http://localhost:8080`
+
+Access the application at:  
+**http://localhost:8080**
 
 ---
 
 ## 🚀 CI/CD Workflow
+
 ### Process:
-1. Push to the `main` branch.
-2. GitHub Actions will:
-   - Build the custom OwnCloud image based on the `Dockerfile`
-   - Push it to Docker Hub with `latest` and commit hash tags
+1. Push changes to the **`main`** branch.
+2. **GitHub Actions** will:
+   - Build a custom OwnCloud image using `Dockerfile`
+   - _(Optional)_ Push the image to Docker Hub or GHCR with:
+     - `latest` tag
+     - Commit SHA tag
 3. On the production server:
    ```bash
    docker compose pull
@@ -73,20 +78,23 @@ Access: `http://localhost:8080`
 
 ---
 
-## 📡 Production Notes
-- Consider using a separate `docker-compose.prod.yml` for SSL and reverse proxy (e.g., Traefik or Nginx).
-- Monitoring and logging with Prometheus/Grafana/Loki is recommended.
-- Automated backups should be implemented for the database and files.
+## 📦 Production Notes
+- Use a dedicated `docker-compose.prod.yml` for SSL and a reverse proxy (e.g., **Traefik**, **Nginx**).
+- Add monitoring & logging with tools like **Prometheus**, **Grafana**, **Loki**.
+- Implement automated backups for:
+  - Database
+  - Files (OwnCloud data directory)
 
 ---
 
-## 🩺 Healthchecks
-Each service has a healthcheck:
-- **OwnCloud** → `/usr/bin/healthcheck`
-- **MariaDB** → `mysqladmin ping`
+## 🩺 Service Healthchecks
+- **OwnCloud** → `/usr/bin/healthcheck`  
+- **MariaDB** → `mysqladmin ping`  
 - **Redis** → `redis-cli ping`
 
 ---
 
 ## 📜 License
-This project is released under the [MIT License](LICENSE).
+Released under the [MIT License](LICENSE).
+```
+
