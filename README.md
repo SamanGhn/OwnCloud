@@ -1,16 +1,17 @@
 ```markdown
 # ☁️ OwnCloud DevOps Setup
 
-A complete **OwnCloud** deployment environment powered by **Docker Compose**, **MariaDB**, **Redis**, and a fully automated **CI/CD pipeline** with **GitHub Actions**.  
+A complete **OwnCloud** deployment environment powered by **Docker Compose**, **MariaDB**, and **Redis**, featuring a fully automated **CI/CD pipeline** with **GitHub Actions**.  
 This setup works equally well for **local development** and **production deployment**.
 
 ---
 
 ## 📂 Project Structure
+
 ```
 .
 ├── .env                        # Environment variables
-├── docker-compose.yml          # Service definitions (OwnCloud, MariaDB, Redis)
+├── docker-compose.yml          # Services: OwnCloud, MariaDB, Redis
 ├── Dockerfile                  # Custom OwnCloud image build
 ├── .github/
 │   └── workflows/
@@ -21,6 +22,7 @@ This setup works equally well for **local development** and **production deploym
 ---
 
 ## ⚙️ Prerequisites
+
 - [Docker](https://docs.docker.com/get-docker/) & [Docker Compose](https://docs.docker.com/compose/)
 - (Optional) Docker Hub or GitHub Container Registry account
 - GitHub repository with appropriate **Secrets** configured
@@ -30,21 +32,22 @@ This setup works equally well for **local development** and **production deploym
 ## 🔧 Environment Setup
 
 1. Create or update the `.env` file with your desired configuration:
-   ```env
-   OWNCLOUD_VERSION=10.13
-   HTTP_PORT=8080
-   OWNCLOUD_DOMAIN=cloud.example.com
-   OWNCLOUD_TRUSTED_DOMAINS=cloud.example.com
-   OWNCLOUD_DB_NAME=owncloud
-   OWNCLOUD_DB_USERNAME=owncloud
-   OWNCLOUD_DB_PASSWORD=SuperSecretPass
-   MYSQL_ROOT_PASSWORD=RootSecretPass
-   ADMIN_USERNAME=admin
-   ADMIN_PASSWORD=admin
-   DOCKER_USER=username
-   ```
 
-2. Add your Docker registry credentials to GitHub Secrets:
+    ```env
+    OWNCLOUD_VERSION=10.13
+    HTTP_PORT=8080
+    OWNCLOUD_DOMAIN=cloud.example.com
+    OWNCLOUD_TRUSTED_DOMAINS=cloud.example.com
+    OWNCLOUD_DB_NAME=owncloud
+    OWNCLOUD_DB_USERNAME=owncloud
+    OWNCLOUD_DB_PASSWORD=SuperSecretPass
+    MYSQL_ROOT_PASSWORD=RootSecretPass
+    ADMIN_USERNAME=admin
+    ADMIN_PASSWORD=admin
+    DOCKER_USER=username
+    ```
+
+2. Add the following GitHub Secrets to your repository:
    - `DOCKER_USER` → Docker Hub / GHCR username  
    - `DOCKER_PASS` → Docker Hub / GHCR password or token  
 
@@ -57,37 +60,39 @@ docker compose --env-file .env up -d
 ```
 
 Access the application at:  
-**http://localhost:8080**
+[http://localhost:8080](http://localhost:8080)
 
 ---
 
 ## 🚀 CI/CD Workflow
 
-### Process:
-1. Push changes to the **`main`** branch.
+**Process:**
+1. Push changes to the `main` branch.
 2. **GitHub Actions** will:
-   - Build a custom OwnCloud image using `Dockerfile`
-   - _(Optional)_ Push the image to Docker Hub or GHCR with:
+   - Build the custom OwnCloud image using the `Dockerfile`.
+   - *(Optional)* Push it to Docker Hub or GHCR with:
      - `latest` tag
-     - Commit SHA tag
+     - commit SHA tag
 3. On the production server:
-   ```bash
-   docker compose pull
-   docker compose up -d
-   ```
+    ```bash
+    docker compose pull
+    docker compose up -d
+    ```
 
 ---
 
 ## 📦 Production Notes
-- Use a dedicated `docker-compose.prod.yml` for SSL and a reverse proxy (e.g., **Traefik**, **Nginx**).
-- Add monitoring & logging with tools like **Prometheus**, **Grafana**, **Loki**.
+
+- Use a separate `docker-compose.prod.yml` for SSL and reverse proxy setup (e.g., **Traefik**, **Nginx**).
+- Add monitoring & logging with tools like **Prometheus**, **Grafana**, and **Loki**.
 - Implement automated backups for:
   - Database
-  - Files (OwnCloud data directory)
+  - OwnCloud data directory
 
 ---
 
 ## 🩺 Service Healthchecks
+
 - **OwnCloud** → `/usr/bin/healthcheck`  
 - **MariaDB** → `mysqladmin ping`  
 - **Redis** → `redis-cli ping`
@@ -95,6 +100,6 @@ Access the application at:
 ---
 
 ## 📜 License
+
 Released under the [MIT License](LICENSE).
 ```
-
